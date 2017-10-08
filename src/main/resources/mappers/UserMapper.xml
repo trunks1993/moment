@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ijnkj.dao.mapper.UserMapper">
+
+    <!-- 开启基于redis的二级缓存 -->
+    <!--<cache type="com.ijnkj.util.RedisCache"/>-->
+
+    <select id="get" resultType="User">
+        SELECT * FROM t_user WHERE id = #{id} LIMIT 1
+    </select>
+
+    <select id="findByOpenId" resultType="User">
+        SELECT * FROM t_user WHERE open_id = #{openId} LIMIT 1
+    </select>
+
+    <update id="updateByOpenId" parameterType="User" >
+        UPDATE
+
+          t_user
+
+        SET
+
+          nick_name = #{nickName},gender = #{gender},country = #{country},province = #{province},city = #{city},avatar_url = #{avatarUrl},update_time = #{updateTime}
+
+        WHERE
+
+          open_id = #{openId}
+    </update>
+
+    <insert id="insert" parameterType="User">
+        INSERT INTO
+         t_user
+
+         (id,nick_name,open_id,gender,country,province,city,avatar_url,top_img,phone_number,create_time)
+
+         VALUES
+
+         (#{id},#{nickName},#{openId},#{gender},#{country},#{province},#{city},#{avatarUrl},#{topImg},#{phoneNumber},#{createTime})
+    </insert>
+
+</mapper>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ijnkj.dao.mapper.MomentMapper">
+    
+    <resultMap id="momentResultMap" type="Moment">
+
+        <id column="id" property="id" />
+        <result column="moment_content" property="momentContent"/>
+        <result column="create_time" property="createTime"/>
+        <result column="moment_img" property="momentImg"/>
+        <result column="delete_flag" property="deleteFlag"/>
+
+        <association property="user" javaType="User">
+            <id column="u_id" property="id" />
+            <result column="open_id" property="openId"/>
+            <result column="union_id" property="unionId"/>
+            <result column="nick_name" property="nickName"/>
+            <result column="avatar_url" property="avatarUrl"/>
+            <result property="gender" column="gender"/>
+            <result property="country" column="country"/>
+            <result property="province" column="province"/>
+            <result property="city" column="city"/>
+        </association>
+
+    </resultMap>
+
+    <!-- 开启基于redis的二级缓存 -->
+    <!--<cache type="com.ijnkj.util.RedisCache"/>-->
+
+    <select id="get" resultType="Moment">
+        SELECT * FROM t_moment WHERE id = #{id} LIMIT 1
+    </select>
+
+
+    <select id="findList" resultMap="momentResultMap">
+--         SELECT * FROM t_moment WHERE delete_flag = 0
+          SELECT
+            m.id,m.moment_content,m.moment_img,m.create_time,
+            u.id u_id,u.open_id,u.union_id,u.nick_name,u.avatar_url,u.gender,u.country,u.province,u.city
+          FROM
+            t_moment m
+          LEFT JOIN
+            t_user u
+          ON
+            m.open_id = u.open_id
+          WHERE
+            m.delete_flag = 0 order by m.create_time desc
+    </select>
+
+
+
+    <insert id="insert" parameterType="Moment">
+        INSERT INTO
+         t_moment
+
+        (id,open_id,moment_content,moment_img,create_time)
+
+        VALUES
+
+        (#{id},#{user.openId},#{momentContent},#{momentImg},#{createTime})
+    </insert>
+
+    <update id="deleteById" parameterType="String">
+        UPDATE t_moment SET delete_flag = 1,update_time = now() WHERE id = #{id}
+    </update>
+</mapper>

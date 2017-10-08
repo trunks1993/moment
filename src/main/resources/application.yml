@@ -1,13 +1,13 @@
 spring:
   # 数据库配置
   datasource:
-    url: jdbc:mysql://{your_host}/{your_db}
-    username: {your_username}
-    password: {your_password}
+    url: jdbc:mysql://localhost:3306/moment?useUnicode=true&amp&characterEncoding=utf-8
+    username: root
+    password: root
     driver-class-name: org.gjt.mm.mysql.Driver
   redis:
     # redis数据库索引（默认为0），我们使用索引为3的数据库，避免和其他数据库冲突
-    database: 3
+    #database: 3
     # redis服务器地址（默认为localhost）
     host: localhost
     # redis端口（默认为6379）
@@ -29,20 +29,22 @@ spring:
 
 # 服务器配置
 server:
-  port: 9999
+  port: 8080
 
 # mybatis配置
 mybatis:
   # 配置映射类所在包名
-  type-aliases-package: com.wooyoo.learning.dao.domain
+  type-aliases-package: com.ijnkj.dao.domain
   # 配置mapper xml文件所在路径，这里是一个数组
-  mapper-locations:
-    - mappers/ProductMapper.xml
+  mapper-locations: mappers/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
 
 
 logging:
   level:
-    com.wooyoo.learning: DEBUG
+    com.ijnkj: DEBUG
 
 ---
 spring:
@@ -51,7 +53,8 @@ spring:
   datasource:
     url: jdbc:h2:mem:test
     username: root
-    password: 123456
+    password: root
     driver-class-name: org.h2.Driver
     schema: classpath:schema.sql
     data: classpath:data.sql
+
